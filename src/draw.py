@@ -505,13 +505,11 @@ class SetParameters(QMainWindow):
 
             self.uploaded_flag = True
             self._set_file_style(True)
-            print("Files uploaded successfully!")
 
         except Exception as e:
             self.uploaded_flag = False
             self._set_file_style(False)
             self._error(f"Something went wrong while uploading:\n{e}")
-            print(f"Upload error: {e}")
 
     # ── draw ──────────────────────────────────────────────────────────────────
 
