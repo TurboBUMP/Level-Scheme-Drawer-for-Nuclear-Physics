@@ -4,7 +4,7 @@
 \
 \
 To call the program move to **src** dir and use **$ python3 draw.py**. This will open a GUI that allows the user to upload the **.csv** files containing the level scheme info and to set everything before drawing.
-If the upload went well, then the first two fields will become green, otherwise, they will be highlighted in red.
+If the upload went well, then the first two fields will become green, otherwise, they will be highlighted in red and a popup window will tell you which exception occurred.
 
 
 The program requires two inputs **.csv** files:
@@ -12,14 +12,12 @@ The program requires two inputs **.csv** files:
 - The first one is the **transitions** file that needs to be filled as follow *(Transition_energy, Starting_level, Ending_level, Spin_parity, Color)*
 - The second one is the **levels** file that needs to be filled as follow *(Level_energy, Spin_Parity, Level_Position , Color)*
     
-Problems to be solved:
-
-- I found out that the levels file must contain at least two lines otherwise there will be a problem when loading the file.
-   *See Transitions.csv and Levels.csv as examples*
-- If matplotlib canvas is closed (pressing X button) after resizing the figure (using the 'Configure Subplots' button) TKinter can't invoke destroy Method and an error is raised. 
+N.B. 
+- When saving, the currently drawn figure will be saved with the graphical ratio that are currently used to display it. If you want to resize the figure you can just resize the window.
+- You can draw 'White' levels at the top of the level scheme to make different level schemes with the same energy-to-size ratio and make them comparable.
 
 GUI preview
-![GUI preview](https://github.com/MassiGitRep/Level-Scheme-Drawer-for-Nuclear-Physics/blob/main/images/GUI_new_new.png)
+![GUI preview](https://github.com/MassiGitRep/Level-Scheme-Drawer-for-Nuclear-Physics/blob/main/images/PyQT5_GUI.png)
 
 \
 \
