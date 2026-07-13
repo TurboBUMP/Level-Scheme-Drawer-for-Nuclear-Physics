@@ -42,7 +42,7 @@ def drawArrow(_number, _delta_x, _x_max, _energy_label, _energy_label_rotation,
 def drawLevel(_energy, _y_labels_position, _spin_parity, _level_color, _x_max,
               _x_fig_start, _x_fig_end, _x_right_label_distance,
               _x_left_label_distance, _fig, _subplot, _fontsize,
-              _draw_gs=1, _offset=0):
+              _draw_gs=1, _draw_lvl_label=1, _offset=0):
 
     if _level_color != _level_color or _level_color == "":  # NaN check
         _level_color = "black"
@@ -56,10 +56,11 @@ def drawLevel(_energy, _y_labels_position, _spin_parity, _level_color, _x_max,
 
     _subplot.hlines(_energy, 0, _x_max, color=_level_color, linewidth=1)
 
-    _subplot.annotate("%.0f" % _real_energy, xy=(0, _energy),
-                      xytext=(_x_fig_start, _y_labels_position),
-                      fontsize=_fontsize, horizontalalignment='right',
-                      verticalalignment='center', color=_level_color)
+    if _draw_lvl_label:
+        _subplot.annotate("%.0f" % _real_energy, xy=(0, _energy),
+                          xytext=(_x_fig_start, _y_labels_position),
+                          fontsize=_fontsize, horizontalalignment='right',
+                          verticalalignment='center', color=_level_color)
     _subplot.annotate(_spin_parity, xy=(_x_max, _energy),
                       xytext=(_x_fig_end, _y_labels_position),
                       fontsize=_fontsize, horizontalalignment='left',
@@ -71,22 +72,24 @@ def drawLevel(_energy, _y_labels_position, _spin_parity, _level_color, _x_max,
             arrowstyle='-', mutation_scale=20, color=_level_color)
         _subplot.add_patch(_spin_label)
 
-    _energy_label = mpatches.FancyArrowPatch(
-        (0, _energy), (_x_left_label_distance, _y_labels_position),
-        arrowstyle='-', mutation_scale=20, color=_level_color)
-    _subplot.add_patch(_energy_label)
+    if _draw_lvl_label:
+        _energy_label = mpatches.FancyArrowPatch(
+            (0, _energy), (_x_left_label_distance, _y_labels_position),
+            arrowstyle='-', mutation_scale=20, color=_level_color)
+        _subplot.add_patch(_energy_label)
 
 
 def drawGS(_nucleus_name, _nucleus_name_fontsize, _y_position, _energy_label,
            _spin_parity, _x_max, _x_fig_start, _x_fig_end,
            _x_right_label_distance, _x_left_label_distance, _fig, _subplot,
-           _fontsize, _color="black", _width=2):
+           _draw_lvl_label, _fontsize, _color="black", _width=2):
 
     _subplot.hlines(_y_position, 0, _x_max, color=_color, linewidth=_width)
-    _subplot.annotate(_energy_label, xy=(0, _y_position),
-                      xytext=(_x_fig_start, _y_position),
-                      fontsize=_fontsize, horizontalalignment='right',
-                      verticalalignment='center')
+    if _draw_lvl_label:
+        _subplot.annotate(_energy_label, xy=(0, _y_position),
+                          xytext=(_x_fig_start, _y_position),
+                          fontsize=_fontsize, horizontalalignment='right',
+                          verticalalignment='center')
     _subplot.annotate(_spin_parity, xy=(_x_max, _y_position),
                       xytext=(_x_fig_end, _y_position),
                       fontsize=_fontsize, horizontalalignment='left',
@@ -101,10 +104,11 @@ def drawGS(_nucleus_name, _nucleus_name_fontsize, _y_position, _energy_label,
         arrowstyle='-', mutation_scale=20, linewidth=_width)
     _subplot.add_patch(_spin_label)
 
-    _energy_label_patch = mpatches.FancyArrowPatch(
-        (0, _y_position), (_x_left_label_distance, _y_position),
-        arrowstyle='-', mutation_scale=20, linewidth=_width)
-    _subplot.add_patch(_energy_label_patch)
+    if _draw_lvl_label:
+        _energy_label_patch = mpatches.FancyArrowPatch(
+            (0, _y_position), (_x_left_label_distance, _y_position),
+            arrowstyle='-', mutation_scale=20, linewidth=_width)
+        _subplot.add_patch(_energy_label_patch)
 
 
 def drawLevelScheme(_nucleus_name, _nucleus_name_fontsize, _fig, _subplot,
@@ -113,8 +117,8 @@ def drawLevelScheme(_nucleus_name, _nucleus_name_fontsize, _fig, _subplot,
                     _x_left_label_distance, _fontsize, _start_level,
                     _stop_level, _start_transitions, _stop_transitions,
                     _arrow_width, _arrow_head_width, _arrow_head_length,
-                    _arrow_color, _Draw_GS, _Draw_All_Aligned,
-                    _energy_label_rotation):
+                    _arrow_color, _Draw_GS, _Draw_lvl_label,
+                    _Draw_All_Aligned, _energy_label_rotation):
 
     mainAx = _subplot
     mainAx.tick_params(left=False, right=False, labelleft=False,
@@ -136,14 +140,14 @@ def drawLevelScheme(_nucleus_name, _nucleus_name_fontsize, _fig, _subplot,
             levels_pandas.iloc[i]['Level color'],
             _x_max, _x_fig_start, _x_fig_end,
             _x_right_label_distance, _x_left_label_distance,
-            _fig, mainAx, _fontsize, _Draw_GS,
+            _fig, mainAx, _fontsize, _Draw_GS, _Draw_lvl_label,
             levels_pandas.iloc[_start_level]['Level energy'])
 
     if _Draw_GS == 1:
         drawGS(_nucleus_name, _nucleus_name_fontsize, 0, "G.S.", "0+",
                _x_max, _x_fig_start, _x_fig_end,
                _x_right_label_distance, _x_left_label_distance,
-               _fig, mainAx, _fontsize)
+               _fig, mainAx, _Draw_lvl_label, _fontsize)
 
     if _Draw_All_Aligned == 0:
         for i in range(_start_transitions, _stop_transitions):

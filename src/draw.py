@@ -197,6 +197,7 @@ class DrawingWindow(QMainWindow):
             arrow_width, arrow_hw, arrow_hl,
             params['arrow_color'],
             params['draw_gs'],
+            params['draw_lvl_label'],
             params['draw_all_aligned'],
             params['energy_label_rotation'],
         )
@@ -318,6 +319,7 @@ class SetParameters(QMainWindow):
         self.btn_draw.setFont(make_font())
 
         self.chk_draw_gs        = chk("Draw G.S.", checked=True)
+        self.chk_draw_lvl_label = chk("Draw Level Energy Label", checked=True)
         self.chk_all_aligned    = chk("Draw Transitions Vertically Aligned")
         self.chk_spread_labels  = chk("Spread labels evenly")
 
@@ -366,10 +368,11 @@ class SetParameters(QMainWindow):
         grid.addWidget(self.lbl_nuc_name,    r, 0); grid.addWidget(self.ent_nuc_name,   r, 1)
         grid.addWidget(self.lbl_nuc_fs,      r, 2); grid.addWidget(self.ent_nuc_fs,     r, 3)
         r += 1
-        grid.addWidget(self.chk_draw_gs,       r, 0)
-        grid.addWidget(self.chk_all_aligned,   r, 1, 1, 2)
+        grid.addWidget(self.chk_draw_gs,        r, 0)
+        grid.addWidget(self.chk_all_aligned,    r, 1, 1, 2)
         r += 1
-        grid.addWidget(self.chk_spread_labels, r, 0)
+        grid.addWidget(self.chk_spread_labels,  r, 0)
+        grid.addWidget(self.chk_draw_lvl_label, r, 1)
 
         self.btn_upload.clicked.connect(self.upload_files)
         self.btn_draw.clicked.connect(self.draw)
@@ -455,16 +458,17 @@ class SetParameters(QMainWindow):
             self.uploaded_flag = False
             self._set_file_style(None)
 
-            min_vdist   = self._float(self.ent_min_vdist, "Min Vert Label Dist")
+            min_vdist      = self._float(self.ent_min_vdist, "Min Vert Label Dist")
             draw_gs        = self.chk_draw_gs.isChecked()
+            draw_lvl_label = self.chk_draw_lvl_label.isChecked()
             spread_labels  = self.chk_spread_labels.isChecked()
 
             lp = pd.read_csv(
                 self.ent_level_file.text(),
                 names=['Level energy', 'Spin-Parity',
-                       'Energy Label Position', 'Level color'],
+                       'Level color'],
                 dtype={'Level energy': float, 'Spin-Parity': str,
-                       'Energy Label Position': str, 'Level color': str},
+                       'Level color': str},
                 comment='#'
             )
             lp = lp.sort_values(by=['Level energy']).reset_index(drop=True)
@@ -533,6 +537,7 @@ class SetParameters(QMainWindow):
                 arrow_head_length    = self._float(self.ent_arrow_hl,  "Arrow Head Length"),
                 arrow_color          = self.ent_arrow_col.text(),
                 draw_gs              = int(self.chk_draw_gs.isChecked()),
+                draw_lvl_label       = int(self.chk_draw_lvl_label.isChecked()),
                 draw_all_aligned     = int(self.chk_all_aligned.isChecked()),
                 energy_label_rotation= self._float(self.ent_elabel_rot,"Energy Label Rotation"),
             )
